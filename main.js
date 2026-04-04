@@ -108,6 +108,12 @@ async function load_display_content(content) {
     const display_wind_direction = document.getElementsByClassName('DISPLAY_wind_direction');
     const display_wind_speed = document.getElementsByClassName('DISPLAY_wind_speed');
 
+    const sunlight_normal = document.getElementsByClassName('normal_sunlight');
+    const sunlight_civil_twilight = document.getElementsByClassName('civil_twilight');
+    const sunlight_nautical_twilight = document.getElementsByClassName('nautical_twilight');
+    const sunlight_astronomical_twilight = document.getElementsByClassName('astronomical_twilight');
+    const transit_ds = document.getElementById('display_transit');
+
     const hourly_forecast_list = document.getElementById('hourly_forecast_list');
 
     console.debug(content)
@@ -132,22 +138,24 @@ async function load_display_content(content) {
         wind_speed: `${convert(current_properties.windSpeed.value).from('km/h').to('m/h').toFixed(2)} mph`,
 
         sunlight: {
-            transit_time: content.astronomicalData.transit,
+            transit_time: new Date(content.properties.astronomicalData.transit),
 
-            normal_sunrise: content.astronomicalData.sunrise,
-            normal_sunset: content.astronomicalData.sunset,
+            normal_sunrise: new Date(content.properties.astronomicalData.sunrise),
+            normal_sunset: new Date(content.properties.astronomicalData.sunset),
 
-            civil_twilight_begin: content.astronomicalData.civilTwilightBegin,
-            civin_twilight_end: content.astronomicalData.civilTwilightEnd,
+            civil_twilight_begin: new Date(content.properties.astronomicalData.civilTwilightBegin),
+            civil_twilight_end: new Date(content.properties.astronomicalData.civilTwilightEnd),
 
-            nautical_twilight_begin: content.astronomicalData.nauticalTwilightBegin,
-            nautical_twilight_end: content.astronomicalData.nauticalTwilightEnd,
+            nautical_twilight_begin: new Date(content.properties.astronomicalData.nauticalTwilightBegin),
+            nautical_twilight_end: new Date(content.properties.astronomicalData.nauticalTwilightEnd),
 
-            astronomical_twilight_begin: content.astronomicalData.astronomicalTwilightBegin,
-            astronomical_twilight_end: content.astronomicalData.astronomicalTwilightEnd,
+            astronomical_twilight_begin: new Date(content.properties.astronomicalData.astronomicalTwilightBegin),
+            astronomical_twilight_end: new Date(content.properties.astronomicalData.astronomicalTwilightEnd),
         }
     }
+    const sl = city_info.sunlight;
     console.log(city_info)
+
     current_city.name = city_info.name;
     current_city.coordinate = city_info.coordinates
 
@@ -162,8 +170,24 @@ async function load_display_content(content) {
     put_content_to_page(display_wind_direction, city_info.wind_direction);
     put_content_to_page(display_wind_speed, city_info.wind_speed);
 
+    put_content_to_page(sunlight_normal, `
+        <p>sunrise: ${sl.normal_sunrise.toLocaleTimeString()}</p>
+        <p>sunset: ${sl.normal_sunset.toLocaleTimeString()}</p>`, true);
+    put_content_to_page(sunlight_civil_twilight, `
+            <p>Twilight Begin: ${sl.civil_twilight_begin.toLocaleTimeString()}</p>
+            <p>Twilight End: ${sl.civil_twilight_end.toLocaleTimeString()}</p>
+        `, true);
+    put_content_to_page(sunlight_nautical_twilight, `
+        <p>Twilight Begin: ${sl.nautical_twilight_begin.toLocaleTimeString()}</p>
+        <p>Twilight End: ${sl.nautical_twilight_end.toLocaleTimeString()}</p>
+        `, true);
+    put_content_to_page(sunlight_astronomical_twilight, `
+        <p>Twilight Begin: ${sl.astronomical_twilight_begin.toLocaleTimeString()}</p>
+        <p>Twilight End: ${sl.astronomical_twilight_end.toLocaleTimeString()}</p>
+        `, true)
+    transit_ds.textContent = sl.transit_time.toLocaleTimeString();
+
     let hrly_fo_content = '';
-    console.log(forcasts)
     for(let i = 0; i < forcasts.length; i++) {
         let f = forcasts[i];
         let time = new Date(f.startTime);
@@ -180,16 +204,23 @@ async function load_display_content(content) {
         `
     }
     hourly_forecast_list.innerHTML = hrly_fo_content
+
+    console.log('Done')
 }
 
 /**
  * 
  * @param {HTMLElement} el 
  * @param {any} content 
+ * @param {boolean} isHTML
  */
-function put_content_to_page(el, content) {
+function put_content_to_page(el, content, isHTML = false) {
     Array.from(el).forEach((el) => {
-        el.textContent = content;
+        if (isHTML) {
+            el.innerHTML = content;
+        } else {
+            el.textContent = content;
+        }
     })
 }
 

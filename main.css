@@ -3,15 +3,22 @@
     --normal-blue: #39538b;
 
     --regular-white: #fff9f6;
+    --secondary-gray: #595959;
 }
 *{
     padding: 0px;
     margin: 0px;
 }
 
+html {
+    min-height: 100%;
+    background: linear-gradient(0deg, var(--normal-blue), var(--light-blue));
+    background-attachment: fixed;
+}
 body {
     height: 100vh;
-    background: linear-gradient(0deg, var(--normal-blue), var(--light-blue));
+    background: transparent;
+    /* background-position: fixed; */
 }
 
 .navbar {
@@ -27,8 +34,12 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem 1rem; /* 增大padding */
+    padding: 1rem 1rem;
     max-width: 100%;
+}
+
+.logo img {
+    height: 3em;
 }
 
 .logo a {
@@ -65,7 +76,7 @@ body {
 }
 
 .nav-item {
-    margin: 2rem 0;
+    margin-bottom: 2rem;
 }
 
 .nav-link {
@@ -78,13 +89,14 @@ body {
 
 a.nav-link:hover,
 a.nav-link.active {
-    color: #2563eb;
+    color: var(--normal-blue);
 }
 
 .hamburger {
     display: flex;
     flex-direction: column;
     cursor: pointer;
+    margin-right: 14px;
 }
 
 .bar {
@@ -110,7 +122,7 @@ a.nav-link.active {
 }
 #location_list:empty::after {
     content: 'No Saved City';
-    color: #595959;
+    color: var(--secondary-gray);
 }
 #location_list .location_list_item {
     border: 1px solid #000;
@@ -137,7 +149,7 @@ article#main {
     margin-bottom: 20px;
     border-radius: 25px;
     padding: 20px;
-    background-color: #fff9f6;
+    background-color: var(--regular-white);
     box-shadow: 0 2px 8px rgba(0,0,0,0.17);
 }
 section#wind_info {
@@ -160,6 +172,10 @@ section#hourly_forecast {
     padding: 5px;
     width: 100%;
     overflow: auto;
+}
+#hourly_forecast_list:empty::after {
+    content: 'No Available Forecast';
+    color: var(--secondary-gray);
 }
 #hourly_forecast_list > .hourly_forecast_item {
     border-radius: 10px;
