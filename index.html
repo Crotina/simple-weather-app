@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EXAMPLE weather app</title>
+    <title>USA Weather</title>
     <link rel="stylesheet" href="main.css">
+    <link rel="shortcut icon" href="resources/icon2.ico" type="image/x-icon">
 </head>
 <body>
     <nav class="navbar">
@@ -49,34 +50,6 @@
                 <li class="nav-item location_list_container">
                     <p class="nav-link">Saved Location</p>
                     <ul id="location_list" class="location_list"></ul>
-                </li>
-
-                <li class="nav-item location_list_container">
-                    <p class="nav-link">Recommended</p>
-                    <ul class="location_list">
-                        <li class="location_list_item">
-                            <a href="index.html?latitude=40.663468&amp;longitude=-73.938697">New York</a>
-                        </li>
-                        <li class="location_list_item">
-                            <a href="index.html?latitude=34.0522&amp;longitude=-118.2437">Los Angeles</a>
-                        </li>
-                        <li class="location_list_item">
-                            <a href="index.html?latitude=37.7749&amp;longitude=-122.4194">San Francisco</a>
-                        </li>
-                        <li class="location_list_item">
-                            <a href="index.html?latitude=41.8781&amp;longitude=-87.6298">Chicago</a>
-                        </li>
-                        <li class="location_list_item">
-                            <a href="index.html?latitude=47.6062&amp;longitude=-122.3321">Seattle</a>
-                        </li>
-                        <li class="location_list_item">
-                            <a href="index.html?latitude=25.7617&amp;longitude=-80.1918">Miami</a>
-                        </li>
-                        <li class="location_list_item">
-                            <a href="index.html?latitude=44.963324&amp;longitude=-93.26832">Minneapolis</a>
-                        </li>
-                    </ul>
-                    
                 </li>
 
             </ul>
@@ -134,15 +107,17 @@
             </div>
         </section>
         <section id="notice_when_use_paramurl">
-            <h4>The location information you are currently viewing is derived from the URL.</h4>
+            <h4>The location information you are currently viewing is derived from the URL, it may not your location</h4>
             <a href="index.html">see the weather at my location.</a>
         </section>
+
         <section id="hourly_forecast">
-            <h2>Hourly Forcast</h2>
+            <h2>Hourly Forcasts</h2>
             <div id="hourly_forecast_list"></div>
         </section>
+
         <section id="daily_forecast">
-            <h2>forecasts</h2>
+            <h2>Forecasts</h2>
             <div id="daily_forecast_list"></div>
         </section>
     </article>

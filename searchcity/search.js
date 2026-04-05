@@ -35,7 +35,7 @@ async function search_for_data(keyword) {
     keyword = keyword.toLowerCase()
     console.log('search for: ', keyword)
     const data = await get_data()
-    let result =  data.filter((u) => u.city_ascii.toLowerCase().includes(keyword));
+    let result = data.filter((u) => u.city_ascii.toLowerCase().includes(keyword));
     result = result.slice(0, 50)
     console.log('result: ', result)
 
