@@ -79,10 +79,12 @@ async function load_display_content(content) {
     const display_cityname = document.getElementsByClassName('DISPLAY_current_cityname')
     const display_coordinates = document.getElementById('display_position');
     const display_temperature = document.getElementsByClassName('DISPYAY_temperature');
+    const display_weathertext = document.getElementById('display_current_weathertext');
 
     const display_visibility = document.getElementsByClassName('DISPLAY_visibility');
     const display_wind_direction = document.getElementsByClassName('DISPLAY_wind_direction');
     const display_wind_speed = document.getElementsByClassName('DISPLAY_wind_speed');
+    const display_humidity = document.getElementsByClassName('DISPLAY_humidity');
 
     const sunlight_normal = document.getElementsByClassName('normal_sunlight');
     const sunlight_civil_twilight = document.getElementsByClassName('civil_twilight');
@@ -93,7 +95,8 @@ async function load_display_content(content) {
     const hourly_forecast_list = document.getElementById('hourly_forecast_list');
     const daily_forecast_list = document.getElementById('daily_forecast_list');
 
-    
+    const public_latitude = document.getElementById('public_latitude');
+    const public_longitude = document.getElementById('public_longitude');
 
     console.log('content: ', content)
     const urls = {
@@ -111,10 +114,12 @@ async function load_display_content(content) {
         name: content.properties.relativeLocation.properties.city,
         state: content.properties.relativeLocation.properties.state,
         display_temperature: `${c_to_f(current_properties.temperature.value)}°F`,
+        display_weathertext: current_properties.textDescription,
 
         visibility: convert_meter_to_ft_or_miles(current_properties.visibility.value),
         wind_direction: `${convert_deg_dir(current_properties.windDirection.value)}`,
         wind_speed: conver_kmh_mph(current_properties.windSpeed.value),
+        humidity: current_properties.relativeHumidity.value,
 
         sunlight: {
             transit_time: new DateNoTimeZone(content.properties.astronomicalData.transit),
@@ -138,6 +143,13 @@ async function load_display_content(content) {
     current_city.name = city_info.name;
     current_city.coordinate = city_info.coordinates
 
+    public_latitude.value = city_info.coordinates[1];
+    public_longitude.value = city_info.coordinates[0];
+
+    setTimeout(() => {
+        document.getElementById('to_listen_event_to_know_it_loaded').click()
+    }, 2);
+
     let forcasts = await get_content(urls.forecast_hourly);
     forcasts = (forcasts.properties.periods).slice(1, 50);
 
@@ -147,10 +159,13 @@ async function load_display_content(content) {
     put_content_to_page(display_cityname, `${city_info.name}, ${city_info.state}`)
     display_coordinates.textContent = `(${city_info.coordinates[1]}, ${city_info.coordinates[0]})`
     put_content_to_page(display_temperature, city_info.display_temperature)
+    display_weathertext.textContent = city_info.display_weathertext;
 
     put_content_to_page(display_visibility, city_info.visibility);
     put_content_to_page(display_wind_direction, city_info.wind_direction);
     put_content_to_page(display_wind_speed, city_info.wind_speed);
+    // put_content_to_page(display_humidity, city_info.humidity);
+    put_content_to_page(display_humidity, (city_info.humidity === null ? "unavilable" : `${(city_info.humidity).toFixed(1)}%`))
 
     put_content_to_page(sunlight_normal, `
         <p>sunrise: ${sl.normal_sunrise.toTimeString()}</p>
@@ -262,7 +277,7 @@ function load_saved_city_list() {
     const saved_city = localst.get_local_setting();
 
     let svct = '';
-    console.log(saved_city.cities)
+    console.log('saved city: ', saved_city.cities)
     for(let a = 0; a < saved_city.cities.length; a++) {
         const b = saved_city.cities[a];
         svct += `
@@ -327,7 +342,7 @@ async function init() {
         is_current_location_able = true
     } catch(error) {
         console.error(error);
-        notice.output_error('we cant get your location', error.message)
+        notice.output_error(`we cant get your location: ${error.message}`, 3000)
     }
     if(is_current_location_able) {
         const location_latitude = location.coords.latitude.toFixed(4);
@@ -336,7 +351,7 @@ async function init() {
     
         try {
             const result = await get_point(location_latitude, location_longitude);
-            console.log(result)
+            console.log('got potnt: ', result)
             load_display_content(result)
         } catch(error) {
             console.error(error);

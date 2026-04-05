@@ -6,6 +6,9 @@
     <title>USA Weather</title>
     <link rel="stylesheet" href="main.css">
     <link rel="shortcut icon" href="resources/icon2.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
 </head>
 <body>
     <nav class="navbar">
@@ -69,6 +72,7 @@
             </span>
             <span>
                 <h1 id="main_temperature" class="DISPYAY_temperature">--</h1>
+                <p id="display_current_weathertext">--</p>
             </span>
         </section>
         <!-- wind -->
@@ -84,6 +88,10 @@
             <div class="wind_info_parts">
                 <span>Wind Speed</span>
                 <span class="DISPLAY_wind_speed">-</span>
+            </div>
+            <div class="wind_info_parts">
+                <span>Humidity</span>
+                <span class="DISPLAY_humidity">-</span>
             </div>
         </section>
         <section id="sunlight">
@@ -120,6 +128,12 @@
             <h2>Forecasts</h2>
             <div id="daily_forecast_list"></div>
         </section>
+
+        <section id="small_map">
+            <h2>Map</h2>
+            <p>The location may be inaccurate.</p>
+            <div id="small_map_container"></div>
+        </section>
     </article>
     <!-- From Uiverse.io by andrew-demchenk0 --> 
 <div class="info" id="notice_info">
@@ -128,8 +142,17 @@
     </div>
     <div class="info__title">notice</div>
 </div>
+
+<input type="text" style="display: none;" id="public_latitude">
+<input type="text" style="display: none;" id="public_longitude">
+<button style="display: none;" id="to_listen_event_to_know_it_loaded"></button>
+
     <script type="module" src="main.js"></script>
     <script type="module" src="content_layout.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+     <script src="home_mapview.js"></script>
 </body>
 </html>
 <template>

@@ -101,6 +101,8 @@ export async function get_current_temperature(observation_stations_url = null) {
     console.log(observation_list.observationStations[0])
 
     const current_temp_url = await get_content(`${observation_list.observationStations[0]}/observations/latest`);
+
+    console.log('observasion full info: ', current_temp_url)
     return current_temp_url.properties
    
 }
