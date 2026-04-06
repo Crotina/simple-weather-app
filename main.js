@@ -157,9 +157,7 @@ async function load_display_content(content) {
     public_latitude.value = city_info.coordinates[1];
     public_longitude.value = city_info.coordinates[0];
 
-    setTimeout(() => {
-        document.getElementById('to_listen_event_to_know_it_loaded').click()
-    }, 2);
+    document.title = `${city_info.name}, ${city_info.state}`;
 
     let daily_forecasts = await get_content(urls.forecast);
     console.log('daily_forecast: ', daily_forecasts);
@@ -255,6 +253,7 @@ async function load_display_content(content) {
 
     // notice.output_debug('load done')
     console.log('content loaded')
+    document.getElementById('to_listen_event_to_know_it_loaded').click()
 }
 
 function conver_kmh_mph(kmh) {
