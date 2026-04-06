@@ -27,7 +27,7 @@
                 <li class="nav-item">
                     <h2>DEBUG | 开发者工具</h2>
                     <ul class="location_list">
-                        <li class="location_list_item"><button class="delete_saved_city_btn" onclick="add_current_city_to_saved_city()">save current city</button></li>
+                        <li class="location_list_item"><button class="delete_saved_city_btn" onclick="share_location()">share_current_location</button></li>
                         <li class="location_list_item"><button class="delete_saved_city_btn" onclick="init()">init</button></li>
                         <li class="location_list_item"><button class="delete_saved_city_btn" onclick="shownotice('Lorem ipsum dolor sit amet consectetur adipisicing elit. In nemo laudantium modi aut fugiat aliquam id consequatur non autem placeat quod hic suscipit, tempora praesentium voluptate dicta quidem. Inventore quisquam aliquam a excepturi?', 3500)">notice test</button></li>
                     </ul>
@@ -47,6 +47,10 @@
                         <li class="location_list_item">
                             <span class="DISPLAY_current_cityname">--</span>
                             <span class="DISPYAY_temperature">--</span>
+                        </li>
+                        <li class="sub_control">
+                            <button class="delete_saved_city_btn" onclick="add_current_city_to_saved_city()">Save</button>
+                            <button class="delete_saved_city_btn" onclick="share_location()">Share</button>
                         </li>
                     </ul>
                 </li>
@@ -121,7 +125,7 @@
         </section>
 
         <section id="hourly_forecast">
-            <h2>Hourly Forcasts</h2>
+            <h2>Hourly Forecasts</h2>
             <div id="hourly_forecast_list"><svg class="loading_shower" viewBox="25 25 50 50"><circle r="20" cy="50" cx="50"></circle></svg></div>
         </section>
 
@@ -140,17 +144,24 @@
             </div>
         </section>
     </article>
-    <!-- From Uiverse.io by andrew-demchenk0 --> 
-<div class="info" id="notice_info">
-    <div class="info__icon">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" height="24" fill="none"><path fill="#393a37" d="m12 1.5c-5.79844 0-10.5 4.70156-10.5 10.5 0 5.7984 4.70156 10.5 10.5 10.5 5.7984 0 10.5-4.7016 10.5-10.5 0-5.79844-4.7016-10.5-10.5-10.5zm.75 15.5625c0 .1031-.0844.1875-.1875.1875h-1.125c-.1031 0-.1875-.0844-.1875-.1875v-6.375c0-.1031.0844-.1875.1875-.1875h1.125c.1031 0 .1875.0844.1875.1875zm-.75-8.0625c-.2944-.00601-.5747-.12718-.7808-.3375-.206-.21032-.3215-.49305-.3215-.7875s.1155-.57718.3215-.7875c.2061-.21032.4864-.33149.7808-.3375.2944.00601.5747.12718.7808.3375.206.21032.3215.49305.3215.7875s-.1155.57718-.3215.7875c-.2061.21032-.4864.33149-.7808.3375z"></path></svg>
-    </div>
-    <div class="info__title">notice</div>
-</div>
 
-<input type="text" style="display: none;" id="public_latitude">
-<input type="text" style="display: none;" id="public_longitude">
-<button style="display: none;" id="to_listen_event_to_know_it_loaded"></button>
+    <!-- From Uiverse.io by andrew-demchenk0 --> 
+    <div class="info" id="notice_info">
+        <div class="info__icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" viewBox="0 0 24 24" height="24" fill="none"><path fill="#393a37" d="m12 1.5c-5.79844 0-10.5 4.70156-10.5 10.5 0 5.7984 4.70156 10.5 10.5 10.5 5.7984 0 10.5-4.7016 10.5-10.5 0-5.79844-4.7016-10.5-10.5-10.5zm.75 15.5625c0 .1031-.0844.1875-.1875.1875h-1.125c-.1031 0-.1875-.0844-.1875-.1875v-6.375c0-.1031.0844-.1875.1875-.1875h1.125c.1031 0 .1875.0844.1875.1875zm-.75-8.0625c-.2944-.00601-.5747-.12718-.7808-.3375-.206-.21032-.3215-.49305-.3215-.7875s.1155-.57718.3215-.7875c.2061-.21032.4864-.33149.7808-.3375.2944.00601.5747.12718.7808.3375.206.21032.3215.49305.3215.7875s-.1155.57718-.3215.7875c-.2061.21032-.4864.33149-.7808.3375z"></path></svg>
+        </div>
+        <div class="info__title">notice</div>
+    </div>
+
+    <dialog id="dlg_notice" class="dialog">
+        <h2>Share: <span class="DISPLAY_current_cityname"></span></h2>
+    	<p class="share_display_url" data-tip="Click to copy link" onclick="copy_to_clipboard(this.textContent)"></p>
+        <button class="close delete_saved_city_btn">Close</button>
+    </dialog>
+
+    <input type="text" style="display: none;" id="public_latitude">
+    <input type="text" style="display: none;" id="public_longitude">
+    <button style="display: none;" id="to_listen_event_to_know_it_loaded"></button>
 
     <script type="module" src="main.js"></script>
     <script type="module" src="content_layout.js"></script>

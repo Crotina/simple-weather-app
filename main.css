@@ -237,7 +237,7 @@ a.nav-link.active {
     transition: all 0.2s;
 }
 .delete_saved_city_btn:hover {
-    background-color: var(--regular-white);
+    background-color: transparent;
     border-color: var(--normal-blue);
     color: var(--normal-blue);
 }
@@ -671,6 +671,48 @@ svg.loading_shower {
  stroke-dashoffset: 0;
  stroke-linecap: round;
  animation: dash4 1.5s ease-in-out infinite;
+}
+
+li.sub_control {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+dialog.dialog {
+    border: 2px solid var(--normal-blue);
+    border-radius: 20px;
+    padding: 30px;
+    margin: auto;
+}
+.dialog > .share_display_url {
+    margin: 40px;
+    padding: 7px;
+    color: var(--normal-blue);
+    cursor: pointer;
+    position: relative;
+}
+.share_display_url::after {
+    content: attr(data-tip);
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.7);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s;
+    margin-top: 6px;
+}
+.share_display_url:hover::after {
+    opacity: 1;
+}
+.share_display_url:hover {
+    text-decoration: underline;
 }
 
 @keyframes rotate4 {

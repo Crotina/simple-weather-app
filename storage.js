@@ -47,6 +47,38 @@ export class Notice {
         }, time);
     }
 }
+
+export class Dialog {
+    /**
+     * @param {HTMLDialogElement} dialogEl 最外侧的 Dialog 元素
+     */
+    constructor(dialogEl){
+        this.dialog = dialogEl;
+        this.contentBox = dialogEl.querySelector('.content');
+        this.closeBtn = dialogEl.querySelector('.close');
+
+        this._close = this._close.bind(this);
+
+        this.closeBtn.addEventListener('click', this._close);
+    }
+
+    /**
+     * 打开 dialog 并设置内容
+     * @param {string | HTMLElement} content - content
+     */
+    open(){
+        this.dialog.showModal();
+    }
+
+    _close(){
+        this.dialog.close();
+    }
+
+    close(){
+        this._close();
+    }
+}
+
 /**
  * 
  * @returns location that include x and y axis
@@ -167,8 +199,13 @@ export function to12Hour(hour24) {
 }
 
 export class Storage{
-    constructor(){
-        this.LOCAL_STORAGE_KEY = 'SAVEDCITY'
+    /**
+     * 
+     * @param {Function} function_for_notice - a function to show notice
+     */
+    constructor(function_for_notice = (msg) => {console.log(msg)}){
+        this.LOCAL_STORAGE_KEY = 'SAVEDCITY';
+        this.function_for_notice = function_for_notice;
     }
 
     _cover_storage(obj) {
@@ -212,6 +249,12 @@ export class Storage{
         }
 
         const data = this.get_local_setting();
+
+        if (data.cities.find((u) => u.name === cityobj.name)) {
+            this.function_for_notice('duplicate name found!');
+            return
+        }
+
         data.cities.push(cityobj);
         this._cover_storage(data);
     }
@@ -223,6 +266,16 @@ export class Storage{
         data.cities.splice(idx, 1);
         console.log(data)
         this._cover_storage(data)
+    }
+}
+
+export class Dialog_notice{
+    /**
+     * 
+     * @param {HTMLElement} el - a dialog element
+     */
+    constructor(el) {
+        this.el = el
     }
 }
 

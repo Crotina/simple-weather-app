@@ -10,18 +10,20 @@ import {
     Storage,
     DateNoTimeZone,
     Notice,
-    get_timezone_time
+    get_timezone_time,
+    Dialog
  } from "./storage.js";
 
  import convert from "https://esm.sh/convert-units";
 
 const current_city = {
     name: null,
-    coordinate: null
+    coordinate: null,
 };
 
-const localst = new Storage();
+const dl = new Dialog(document.getElementById('dlg_notice'));
 const notice = new Notice(document.getElementById('notice_info'));
+const localst = new Storage((msg) => notice.output_error(msg, 3500));
 
 /**
  * 
@@ -56,21 +58,21 @@ async function get_point(latitude, longitude) {
     return await get_content(`https://api.weather.gov/points/${latitude},${longitude}`)
 }
 
-/**
- * this function convert a timestamp to a date
- * @param {number} timestamp a 13 digits timestamp
- * @returns {string} the time that people can identify
- */
-function timestamp_convert(timestamp) {
-    timestamp = String(timestamp)
-    const check = /^\d{13}$/;
-
-    if(!check.test(timestamp)){console.error('timestamp is not 13 digits!'); return false}
-
-    return new Date(timestamp).toDateString()
+function share_location(){
+    if(current_city.coordinate === null) {
+        return
+    }
+    // const current_copy_url = `index.html?latitude=${current_city.coordinate[1]}&longitude=${current_city.coordinate[0]}`;
+    const current_copy_url = 'sharing is not available for now'
+    dl.dialog.querySelector('.share_display_url').textContent = current_copy_url;
+    dl.open();
 }
 
-
+function copy_to_clipboard(text) {
+    if (!navigator.clipboard) return
+    navigator.clipboard.writeText(text);
+    notice.output_log('Copy ok!')
+}
 
 /**
  * 加载内容到页面，传入的值必须是从美国官方天气预报api获取的第一步信息(point/lati..., longit...)
@@ -149,7 +151,7 @@ async function load_display_content(content) {
     const sl = city_info.sunlight;
     console.log('city info: ', city_info);
 
-    current_city.name = city_info.name;
+    current_city.name = `${city_info.name}, ${city_info.state}`;
     current_city.coordinate = city_info.coordinates
 
     public_latitude.value = city_info.coordinates[1];
@@ -177,19 +179,19 @@ async function load_display_content(content) {
     put_content_to_page(sunlight_normal, `
         <p>Sunrise: ${sl.normal_sunrise.toTimeString()}</p>
         <p>Sunset: ${sl.normal_sunset.toTimeString()}</p>
-        <p>The time when the sun comes up or goes down at the line of the earth.</p>`, true);
+        <p>The time when the sun comes up or goes down at the horizon</p>`, true);
     put_content_to_page(sunlight_civil_twilight, `
             <p>Twilight Begin: ${sl.civil_twilight_begin.toTimeString()}</p>
             <p>Twilight End: ${sl.civil_twilight_end.toTimeString()}</p>
-            <p>The sun is just below the line of the earth. The sky is still bright, and you can see well.</p>`, true);
+            <p>The sun is just below the horizon. The sky is bright, and you can see well.</p>`, true);
     put_content_to_page(sunlight_nautical_twilight, `
         <p>Twilight Begin: ${sl.nautical_twilight_begin.toTimeString()}</p>
         <p>Twilight End: ${sl.nautical_twilight_end.toTimeString()}</p>
-        <p>The sun is deeper below the line. The sky is darker, but you can still see the sea line.</p>`, true);
+        <p>The sun is deeper below the horizon. The sky is darker, but you can still see the sea line.</p>`, true);
     put_content_to_page(sunlight_astronomical_twilight, `
         <p>Twilight Begin: ${sl.astronomical_twilight_begin.toTimeString()}</p>
         <p>Twilight End: ${sl.astronomical_twilight_end.toTimeString()}</p>
-        <p>The sun is far below the line. The sky is fully dark after the astronomical twilight end, and stars can be seen well.</p>`, true)
+        <p>Sky is fully dark after the astronomical twilight end, and stars can be seen well.</p>`, true)
     transit_ds.textContent = sl.transit_time.toTimeString();
 
     let hrly_fo_content = '';
@@ -251,7 +253,8 @@ async function load_display_content(content) {
 
     load_saved_city_list();
 
-    notice.output_debug('load done')
+    // notice.output_debug('load done')
+    console.log('content loaded')
 }
 
 function conver_kmh_mph(kmh) {
@@ -383,5 +386,7 @@ window.init = init_maual;
 window.localst = localst;
 window.current_city = current_city;
 window.shownotice = DEBUG_notice;
+window.share_location = share_location;
+window.copy_to_clipboard = copy_to_clipboard;
 
 document.addEventListener('DOMContentLoaded', init)
