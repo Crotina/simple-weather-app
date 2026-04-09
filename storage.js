@@ -48,7 +48,35 @@ export class Notice {
     }
 }
 
+
+
 export class Dialog {
+    /**
+     * @param {HTMLDialogElement} dialogEl 最外侧的 Dialog 元素
+     */
+    constructor(dialogEl){
+        this.dialog = dialogEl;
+        this.contentBox = dialogEl.querySelector('.content');
+        this.closeBtn = dialogEl.querySelector('.close');
+
+        this._close = this._close.bind(this);
+
+        this.closeBtn.addEventListener('click', this._close);
+    }
+    open(){
+        this.dialog.showModal();
+    }
+
+    _close(){
+        this.dialog.close();
+    }
+
+    close(){
+        this._close();
+    }
+}
+
+export class RegularDialogNotice {
     /**
      * @param {HTMLDialogElement} dialogEl 最外侧的 Dialog 元素
      */
@@ -66,7 +94,19 @@ export class Dialog {
      * 打开 dialog 并设置内容
      * @param {string | HTMLElement} content - content
      */
-    open(){
+    open(content, display_as_element = false){
+        if (display_as_element) {
+            this.contentBox.innerHTML = content;
+        } else {
+            if(typeof content === 'string'){
+                this.contentBox.textContent = content;
+            } else if(content instanceof HTMLElement){
+                this.contentBox.innerHTML = '';
+                this.contentBox.appendChild(content);
+                // this.contentBox.innerHTML = content;
+            }
+        }
+        
         this.dialog.showModal();
     }
 
@@ -77,6 +117,13 @@ export class Dialog {
     close(){
         this._close();
     }
+}
+
+function _notice(content) {
+    // const n = new Notice(document.getElementById('notice_info'));
+    // n.output_error(`!!! ERROR: ${content}`, 25000);
+    const m = new RegularDialogNotice(document.getElementById('notice_info'));
+    m.open(`!!! ERROR: ${content}`);
 }
 
 /**
@@ -116,6 +163,7 @@ export async function get_content(url) {
         return result
     } catch(error) {
         console.error(error);
+        _notice(`FAILED TO GET CONTENT: ${error}`)
         return null
     }
 }

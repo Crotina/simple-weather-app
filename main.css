@@ -616,6 +616,10 @@ section#notice_when_use_paramurl {
 }
 .info.error {
     background-color: var(--error);
+    
+}
+.info.error > .info__title {
+    font-weight: 700;
 }
 
 .info.show {
@@ -713,6 +717,15 @@ dialog.dialog {
 }
 .share_display_url:hover {
     text-decoration: underline;
+}
+
+.dialog .content.error {
+    border: 2px solid #fd0606;
+    background-color: rgba(255, 85, 85, 0.3);
+    border-radius: 10px;
+    padding: 20px;
+    /* color: var(--pure-white); */
+    font-size: 30px;
 }
 
 @keyframes rotate4 {

@@ -11,7 +11,8 @@ import {
     DateNoTimeZone,
     Notice,
     get_timezone_time,
-    Dialog
+    Dialog,
+    RegularDialogNotice
  } from "./storage.js";
 
  import convert from "https://esm.sh/convert-units";
@@ -22,6 +23,7 @@ const current_city = {
 };
 
 const dl = new Dialog(document.getElementById('dlg_notice'));
+const display_error_dl = new RegularDialogNotice(document.getElementById('dlg_onerror'));
 const notice = new Notice(document.getElementById('notice_info'));
 const localst = new Storage((msg) => notice.output_error(msg, 3500));
 
@@ -110,11 +112,11 @@ async function load_display_content(content) {
 
     const current_properties = await get_current_temperature(urls.observation_station);
     
-    console.log('current_properties: ', current_properties);
+    console.log('observation properties: ', current_properties);
 
     let forcasts = await get_content(urls.forecast_hourly);
     console.log('hourly forecasts: ', forcasts)
-    let weathertext = forcasts.properties.periods[0].shortForecast;
+    let weathertext = forcasts.properties.periods[0].shortForecast; //当前小时的短天气文字
     forcasts = (forcasts.properties.periods).slice(1, 50);
     
 
@@ -270,16 +272,14 @@ function active_forecast_card(){
         const btn = card.querySelector('.expand_btn');
         
         btn.addEventListener('click', () => {
-            // 切换当前卡片的展开类名
             const isExpanded = card.classList.toggle('is-expanded');
             
             //无障碍属性更新
             btn.setAttribute('aria-expanded', isExpanded);
-
-            //手风琴
-            // cards.forEach(otherCard => {
-            //     if (otherCard !== card) otherCard.classList.remove('is-expanded');
-            // });
+            //手风琴,不知道为什么好像没有用
+            cards.forEach(otherCard => {
+                if (otherCard !== card) otherCard.classList.remove('is-expanded');
+            });
         });
     });
 }
@@ -354,7 +354,8 @@ async function init() {
         is_current_location_able = true
     } catch(error) {
         console.error(error);
-        notice.output_error(`we cant get your location: ${error.message}`, 3000)
+        // notice.output_error(`we cant get your location: ${error.message}`, 3000)
+        display_error_dl.open('we cant get your location!');
     }
     if(is_current_location_able) {
         const location_latitude = location.coords.latitude.toFixed(4);

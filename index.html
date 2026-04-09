@@ -153,11 +153,18 @@
         <div class="info__title">notice</div>
     </div>
 
+    <!-- this dialog is for show share link -->
     <dialog id="dlg_notice" class="dialog">
         <h2>Share: <span class="DISPLAY_current_cityname"></span></h2>
     	<p class="share_display_url" data-tip="Click to copy link" onclick="copy_to_clipboard(this.textContent)"></p>
         <button class="close delete_saved_city_btn">Close</button>
     </dialog>
+
+    <!-- this dialog is for show error content -->
+    <dialog id="dlg_onerror" class="dialog">
+    	<p class="content error"></p>
+    	<button class="close delete_saved_city_btn">okay</button>
+	</dialog>
 
     <input type="text" style="display: none;" id="public_latitude">
     <input type="text" style="display: none;" id="public_longitude">
