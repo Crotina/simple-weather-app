@@ -41,13 +41,15 @@ tabContainers.forEach(container => {
     }
 });
 
-document.getElementById('search_city').addEventListener('click', () => {
+const do_search = () => {
     const user_search_keyword = document.getElementById('search_city_input').value;
     console.log('user input: ', user_search_keyword);
     if(user_search_keyword == '') return
 
     redirect(`./searchcity/index.html?keyword=${user_search_keyword}`, "_self");
-})
+}
+window.do_search = do_search;
+document.getElementById('search_city').addEventListener('click', do_search)
 
 // const storage = new Storage();
 // const toggleBtn = document.getElementById("toggle_theme");

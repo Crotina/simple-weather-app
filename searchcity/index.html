@@ -16,10 +16,10 @@
                 <input type="text">
                 <button>click to search</button>
             </div> -->
-            <div class="searchbar_navmenu melokii">
-                <input type="text" class="search" name="search_city" placeholder="city name" id="search_input">
-                <button class="confirm" id="search_btn">search</button>
-            </div>
+                <form class="searchbar_navmenu melokii" onsubmit="do_search(); return false;">
+                    <input type="text" class="search" name="search_city" placeholder="city name" id="search_input">
+                    <button type="submit" class="confirm" id="search_btn">search</button>
+                </form>
             <p>The name displayed here may differ from that shown on the weather forecast page</p>
         </section>
         <section id="search_result">

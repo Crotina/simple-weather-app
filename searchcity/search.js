@@ -16,12 +16,14 @@ async function get_data() {
 const search_input = document.getElementById('search_input');
 const search_btn = document.getElementById('search_btn');
 
-search_btn.addEventListener('click', () => {
+const do_search = () => {
     const input_info = search_input.value;
     if (input_info == '') return
 
     redirect(`./index.html?keyword=${input_info}`, "_self")
-});
+}
+window.do_search = do_search;
+search_btn.addEventListener('click', do_search);
 
 /**
  * 

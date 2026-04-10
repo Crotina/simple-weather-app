@@ -24,20 +24,22 @@
                     
                 </li>
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <h2>DEBUG | 开发者工具</h2>
                     <ul class="location_list">
                         <li class="location_list_item"><button class="delete_saved_city_btn" onclick="share_location()">share_current_location</button></li>
                         <li class="location_list_item"><button class="delete_saved_city_btn" onclick="init()">init</button></li>
                         <li class="location_list_item"><button class="delete_saved_city_btn" onclick="shownotice('Lorem ipsum dolor sit amet consectetur adipisicing elit. In nemo laudantium modi aut fugiat aliquam id consequatur non autem placeat quod hic suscipit, tempora praesentium voluptate dicta quidem. Inventore quisquam aliquam a excepturi?', 3500)">notice test</button></li>
                     </ul>
-                </li>
+                </li> -->
 
                 <li class="nav-item search">
                     <p class="nav-link">Search</p>
-                    <div class="searchbar_navmenu">
-                        <input type="text" class="search" name="search_city" id="search_city_input" placeholder="city name">
-                        <button class="confirm" id="search_city">search</button>
+                    <div>
+                        <form class="searchbar_navmenu" onsubmit="do_search(); return false">
+                            <input type="text" class="search" name="search_city" id="search_city_input" placeholder="city name">
+                            <button type="submit" class="confirm" id="search_city">search</button>
+                        </form>
                     </div>
                 </li>
 
