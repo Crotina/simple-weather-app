@@ -99,18 +99,24 @@ async function load_display_content(content) {
 
     const hourly_forecast_list = document.getElementById('hourly_forecast_list');
     const daily_forecast_list = document.getElementById('daily_forecast_list');
+    const forecast_zone_name = document.getElementById('display_forecast_zone_name');
 
     const public_latitude = document.getElementById('public_latitude');
     const public_longitude = document.getElementById('public_longitude');
+    const public_forecast_zone_arr = document.getElementById('public_forecast_zone');
 
     console.log('content: ', content)
     const urls = {
         forecast: content.properties.forecast,
         forecast_hourly: content.properties.forecastHourly,
-        observation_station: content.properties.observationStations
+        observation_station: content.properties.observationStations,
+        forecast_zone: content.properties.forecastZone
     }
 
     const current_properties = await get_current_temperature(urls.observation_station);
+    const forecast_zone_info = await get_content(urls.forecast_zone);
+
+    console.log('forecast zone info: ', forecast_zone_info)
     
     console.log('observation properties: ', current_properties);
 
@@ -119,13 +125,16 @@ async function load_display_content(content) {
     let weathertext = forcasts.properties.periods[0].shortForecast; //当前小时的短天气文字
     forcasts = (forcasts.properties.periods).slice(1, 50);
     
+    const localtime = await get_timezone_time(content.properties.timeZone);
+
+    let daily_forecasts = await get_content(urls.forecast);
 
     const city_info = {
         coordinates: content.properties.relativeLocation.geometry.coordinates,
 
         name: content.properties.relativeLocation.properties.city,
         state: content.properties.relativeLocation.properties.state,
-        localtime: await get_timezone_time(content.properties.timeZone),
+        localtime: localtime,
         display_temperature: `${c_to_f(current_properties.temperature.value)}°F`,
         display_weathertext: weathertext,
 
@@ -148,8 +157,22 @@ async function load_display_content(content) {
 
             astronomical_twilight_begin: new DateNoTimeZone(content.properties.astronomicalData.astronomicalTwilightBegin),
             astronomical_twilight_end: new DateNoTimeZone(content.properties.astronomicalData.astronomicalTwilightEnd),
+        },
+
+        forecast_zone: {
+            polygon: forecast_zone_info.geometry.coordinates,
+            polygon_type: forecast_zone_info.geometry.type,
+            forecast_zone_name: forecast_zone_info.properties.name,
+            forecast_zone_id: forecast_zone_info.properties.id
         }
     }
+
+    forecast_zone_name.textContent = `${city_info.forecast_zone.forecast_zone_name} (${city_info.forecast_zone.forecast_zone_id})`;
+    public_forecast_zone_arr.value = JSON.stringify({
+        polygon: city_info.forecast_zone.polygon,
+        poly_type: city_info.forecast_zone.polygon_type
+    })
+
     const sl = city_info.sunlight;
     console.log('city info: ', city_info);
 
@@ -161,7 +184,6 @@ async function load_display_content(content) {
 
     document.title = `${city_info.name}, ${city_info.state}`;
 
-    let daily_forecasts = await get_content(urls.forecast);
     console.log('daily_forecast: ', daily_forecasts);
 
     put_content_to_page(display_cityname, `${city_info.name}, ${city_info.state}`)
@@ -273,11 +295,9 @@ function active_forecast_card(){
         
         btn.addEventListener('click', () => {
             const isExpanded = card.classList.toggle('is-expanded');
-            
-            //无障碍属性更新
             btn.setAttribute('aria-expanded', isExpanded);
-            //手风琴,不知道为什么好像没有用
-            cards.forEach(otherCard => {
+
+            Array.from(cards).forEach(otherCard => {
                 if (otherCard !== card) otherCard.classList.remove('is-expanded');
             });
         });

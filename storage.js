@@ -127,7 +127,7 @@ function _notice(content) {
 }
 
 /**
- * 
+ * get user's current location
  * @returns location that include x and y axis
  */
 export async function get_current_location() {

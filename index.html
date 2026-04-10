@@ -136,7 +136,8 @@
 
         <section id="small_map">
             <h2>Map</h2>
-            <p>The location may be inaccurate.</p>
+            <p>forecast zone and your location, your location may be inaccurate in this map</p>
+            <p><span>forecast zone: </span><strong><span id="display_forecast_zone_name"></span></strong></p>
             <div id="small_map_container">
                 <svg class="loading_shower" viewBox="25 25 50 50">
                     <circle r="20" cy="50" cx="50"></circle>
@@ -168,6 +169,8 @@
 
     <input type="text" style="display: none;" id="public_latitude">
     <input type="text" style="display: none;" id="public_longitude">
+    <input type="text" style="display: none;" id="public_forecast_zone">
+    
     <button style="display: none;" id="to_listen_event_to_know_it_loaded"></button>
 
     <script type="module" src="main.js"></script>
