@@ -82,6 +82,7 @@ function copy_to_clipboard(text) {
  */
 async function load_display_content(content) {
     console.time('time spent');
+    console.time('API requests');
     const display_cityname = document.getElementsByClassName('DISPLAY_current_cityname')
     const display_coordinates = document.getElementById('display_position');
     const display_temperature = document.getElementsByClassName('DISPYAY_temperature');
@@ -137,6 +138,8 @@ async function load_display_content(content) {
         get_timezone_time(content.properties.timeZone),
         get_content(urls.forecast)
     ]);
+    console.timeEnd('API requests');
+    console.time('data processing');
 
     const current_properties = (results[0].status === 'fulfilled' ? results[0].value : null);
     const forecast_zone_info = (results[1].status === 'fulfilled' ? results[1].value : null);
@@ -303,12 +306,15 @@ async function load_display_content(content) {
     }
     daily_forecast_list.innerHTML = dly_fo;
     active_forecast_card();
+    console.timeEnd('data processing');
+    console.time('page rendering');
 
     load_saved_city_list();
 
     // notice.output_debug('load done')
     console.log('content loaded')
     document.getElementById('to_listen_event_to_know_it_loaded').click();
+    console.timeEnd('page rendering');
     console.timeEnd('time spent');
 }
 
@@ -390,8 +396,10 @@ async function init() {
     if (is_urlparam_okay) {
         console.log('available url param detected')
         try {
+            console.time('get_point');
             const resu = await get_point(is_urlparam_okay.latitude, is_urlparam_okay.longitude);
-            load_display_content(resu)
+            console.timeEnd('get_point');
+            await load_display_content(resu)
             document.getElementById('notice_when_use_paramurl').style.display = 'flex'
         } catch(error) {
             console.log(error)
@@ -401,7 +409,9 @@ async function init() {
     let is_current_location_able = false;
     let location = ''
     try{
+        console.time('get_current_location');
         location = await get_current_location();
+        console.timeEnd('get_current_location');
         is_current_location_able = true
     } catch(error) {
         console.error(error);
@@ -414,9 +424,11 @@ async function init() {
         console.log('ready for get the weather of your location: ', location);
     
         try {
+            console.time('get_point');
             const result = await get_point(location_latitude, location_longitude);
+            console.timeEnd('get_point');
             console.log('got potnt: ', result)
-            load_display_content(result)
+            await load_display_content(result)
         } catch(error) {
             console.error(error);
             

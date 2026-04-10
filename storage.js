@@ -153,7 +153,20 @@ export async function get_current_location() {
  * @param {string} url - url
  * @returns {object | null}
  */
+// 简单的内存缓存，存储最近查询的结果（有效期5分钟）
+const _api_cache = new Map();
+
+function _is_cache_valid(timestamp) {
+    return (Date.now() - timestamp) < 5 * 60 * 1000; // 5分钟有效期
+}
+
 export async function get_content(url) {
+    // 检查缓存
+    if (_api_cache.has(url) && _is_cache_valid(_api_cache.get(url).timestamp)) {
+        console.log(`Cache hit: ${url}`);
+        return _api_cache.get(url).data;
+    }
+
     try {
         const response = await fetch(url);
 
@@ -162,7 +175,13 @@ export async function get_content(url) {
         }
 
         const result = await response.json();
-        // console.log(result)
+        
+        // 存入缓存
+        _api_cache.set(url, {
+            data: result,
+            timestamp: Date.now()
+        });
+        
         return result
     } catch(error) {
         console.error(error);
