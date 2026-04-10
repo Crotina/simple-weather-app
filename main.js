@@ -25,7 +25,7 @@ const current_city = {
 const dl = new Dialog(document.getElementById('dlg_notice'));
 const display_error_dl = new RegularDialogNotice(document.getElementById('dlg_onerror'));
 const notice = new Notice(document.getElementById('notice_info'));
-const localst = new Storage((msg) => notice.output_error(msg, 3500));
+const localst = new Storage((msg) => notice.output_warn(msg, 3500));
 
 /**
  * 
@@ -57,7 +57,11 @@ function urlparam_check() {
  */
 async function get_point(latitude, longitude) {
     console.log('get-point', latitude, longitude)
-    return await get_content(`https://api.weather.gov/points/${latitude},${longitude}`)
+    const result = await get_content(`https://api.weather.gov/points/${latitude},${longitude}`)
+    if (result === null) {
+        throw new Error('Unable to fetch weather data. The weather service may be temporarily unavailable.')
+    }
+    return result
 }
 
 function share_location(){
@@ -402,7 +406,8 @@ async function init() {
             await load_display_content(resu)
             document.getElementById('notice_when_use_paramurl').style.display = 'flex'
         } catch(error) {
-            console.log(error)
+            console.error('Error loading weather data:', error)
+            display_error_dl.open(`Failed to load weather data: ${error.message}`);
         }
         return
     }
@@ -430,8 +435,8 @@ async function init() {
             console.log('got potnt: ', result)
             await load_display_content(result)
         } catch(error) {
-            console.error(error);
-            
+            console.error('Error loading weather data:', error)
+            display_error_dl.open(`Failed to load weather data: ${error.message}`);
         }
         
     }
